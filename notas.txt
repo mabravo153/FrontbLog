@@ -1,0 +1,66 @@
+APLICACION SPA CON ANGULAR 
+
+spa es single page aplication, un sitio que no recarga su pagina si no que funciona con llamados asincronos. a lo largo 
+del curso estaremos manejando esta informacion 
+
+en este curso veremos 
+
+instalacion de angular
+creacion de modelos
+creacion de componentes 
+creacion de rutas 
+registro de usuarios 
+login de usuario
+etc
+
+INSTALAR ANGULAR 
+debemos tener instalado nodejs 
+
+Nota: Concebido como un entorno de ejecución de JavaScript orientado a eventos asíncronos, 
+Node.js está diseñado para construir aplicaciones en red escalables. En la siguiente aplicación de ejemplo "hola mundo", se pueden manejar muchas conexiones concurrentes.
+Por cada conexión el callback será ejecutado, sin embargo si no hay trabajo que hacer Node.js estará durmiendo.
+
+lo descargamos para poder usar npm que es gestor de paquetes, lo mismo que se usa para instalar firebase 
+
+luego de instalar node debemos actualizar npm, lo hacemos con el comando npm install -g npm@latest 
+
+luego de actualizar debemos borrar la cache de nmp con el siguiente comando npm cache clean --force, esto lo hacemos con el fin de evitar 
+que no se actualice algun paquete que deseemos, luego debemos desactivar las auditorias para evitar fallos 
+eso lo hacemos con el siguiente comando npm set audit false 
+
+luego debemos desintalar el cli de angular con los siguientes comandos npm uninstall -g angular-cli y 
+npm uninstall -g @angular/cli  pues en este caso no esta nada porque no tenemos angular 
+
+
+Nota: para limpiar la pantalla en la consola de windows es usando cls
+
+luego de seguir todos los pasos ahora si podemos instalar angular, con el siguiente comando npm install -g @angular/cli de esta manera instalamos el 
+cli que nos dara una serie de comandos con los cuales rearemos los proyectos y haremos ciertas cosas. 
+
+para crear un proyecto como tal debemos ejecutar ng new, aparte de crear un proyecto de angular desde 0 nos brindara una serie de directorios
+al ejecutar este comado nos pedira un nombre de proyecto, algo similar a cuando usamos composer con laravel 
+
+luego de eso nos pregunta si usaremos el sistema de rutas de angular por defecto, le damos que no. ya que podemos configurarlo por nuestra cuenta,
+nos pregunta si vamos a usar preprosesadores, en este caso no. y ahi empieza a instalar una serie de ficheros 
+
+seguido a estar instalado, trabajaremos en la carpeta src seguido app 
+
+Nota: angular por defecto trae sus propio servidor local. se activa con el comando ng serve, pero debemos estar en la carpeta del proyecto
+al ejecutar el comando, se activa la auto complilacion y un live server como el que tenemos incluido aqui en vscode. luego de ejecutar el comando 
+este nos arrojara una url. al acceder a ella. accederemos a una pagina principal que nos brinda angular
+
+Nota: angular usa typescript el cual es un lenguaje de programacion el cual es un subconjunto y le agrega tipos estaticos y objetos basados en clases
+para poder usar POO. pero debemos transpilarlo para que el navegador lo interprete, ya que ellos solo usan html css y js 
+
+
+INSTALAR DEPENDENCIA Y LIBRERIAS 
+
+jquery, boostrap, angular woala (editor de texto), angularfileuploader 
+
+esto lo hacemos abriendo e fichero package.json en la seccion de dependencias. las agregamos como un objeto json normal 
+"bootstrap": "4.3.1", en el caso de bootstrap. luego de agregarlas abrimos la consola 
+
+cortamos la ejecucion del serve y actualizamos con npm update. actualiza e instala la que no estan 
+
+"angular-froala-wysiwyg": "2.9.1", /*editor de codigo para el blog*/
+    "angular-file-uploader": "4.1.4" /*plugin de subida de achivos*/ 
