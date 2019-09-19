@@ -161,3 +161,185 @@ pero podemos crear el documento con html y css normal
 
 
 COMPONENTES 
+para crear los componentes debemos usar la consola, crearemos uno para el login y uno para el registro, crearemos una carpeta para los componentes
+
+angular usa una lista de comandos y en su web oficial explica para que se usa cada una de ellas 
+
+https://angular.io/cli, en este caso la g es para generar. entrando al link y ondendo podemos ver todos los parametros que estos reciben 
+
+ng g component carpeta/nombreComponente
+
+esto nos crea una serie de archivos entre los cuales esta el archivo html, la hoja de estilos, clase de ts 
+
+el componente como tal es muy interesante, este importa un objeto global llamado Components y otro llamado oninit, del core de angular 
+
+seguido a eso nos arroja el selector que debemos usar para mostrar el contenido de este componente, la hoja de estilos y la maquetacion de html 
+
+@Component({
+  selector: 'app-login',
+  templateUrl: './login.component.html',
+  styleUrls: ['./login.component.css']
+})
+
+podemos crear un atributo y lo llamamos con el constructor para cuando se vaya a instanciar esta clase, se cree automaticamente 
+
+para imprimir algo que creemos en el componente, usamos {{}} como en laravel, recuerda usar una etiqueta para mostrar 
+
+para que un componente funcione debe estar registrado en app.module.ts pero al crearlo, se registra automaticamente. de esta manera lo podemos usar e manera global 
+
+para llamarlo lo podemos hacer en app.component o cualquier otro componente que queramos usar, solo debemos mostrar la etiqueta. de esta manera nos mostrara la informacion 
+
+estaremos creando el atributo de las paginas 
+
+
+asi mismo haremos con la seccion de 
+
+CONFIGURAR LAS RUTAS DE ANGULAR 
+
+haremos eso para que cada uno de los componentes que hemos creado sea una pagina independiente 
+
+debemos crear un nuevo archivo en app. que por convension puede ser routing.ts y debemos cargar diferentes modulos 
+
+import {ModuleWithProviders} from '@angular/core'; //permite cargar como servicio las cosas del router 
+import {Routes, RouterModule} from '@angular/router'; //clases y librerias del router 
+
+luego importamos los components que hemos creado, los nombres los encontraremos en el mismo componente 
+
+import {RegisterComponent } from './components/register/register.component'; de esta manera
+
+luego debemos instanciar el servicio Router, debemos crear una constante de tipo routes la cual sera un array, dentro del array ingresaremos las rutas
+rutas que tendra la aplicacion, esta ira relacionanda con un componente. esto va incluido en un objeto json 
+
+{path: 'login', component: LoginComponent}, de esta manera. en el path aparacera la extenion que tendra en la url el componente 
+myapp.com/login  
+
+segun la documentacion de angular. es necesario poner la ruta ** o sea la ruta no valida. al final de todo 
+
+luego de eso debemos exportar dos elementos, la rutas y la configuracion 
+export const appRoutingProviders: any[] = []; //para cargar las rutas como servicios
+
+.luego exportaremos el modulo de las rutas, o sea la configuracion que hicimos hace poco en la documentacion de angular. esta llama una funcion 
+@NgModule({
+  imports: [
+    RouterModule.forRoot(
+      appRoutes,
+      { enableTracing: true } // <-- debugging purposes only
+    )
+    // other imports here
+  ],
+  ...
+})
+
+ESTE PASO DEBEMOS HACERLO PARA CARGARLO EN APP MODULE
+
+pero en nuestro ejemplo crearemos una constante y la exportamos, de tipo ModuleWithProviders e instanciaremos RouterModule. ya como aparece en el ejemplo de arriba
+RouterModule.forRoot(appRoutes). el parametro que recibe es la constante de tipo Routes que creamos con las rutas 
+
+https://angular.io/guide/router toda la informacion de como hacerlo lo encontraremos en este link 
+
+quedaria asi  export const Routing: ModuleWithProviders = RouterModule.forRoot(appRoutes);
+
+
+ahora debemos abrir app.module.ts para cargar la informacion. ya en este punto debemos importar las constantes generadas en el archivo de rutas 
+luego cargamos los modulos, en la seccion imports 
+
+imports: [
+    BrowserModule,
+    routingModule
+  ],
+  providers: [
+    appRoutingProviders
+  ],
+
+  de esta manera. es recomedable que al modulo (donde estan plasmadas las rutas) tenga como extencion Module
+
+
+
+pero esto por si solo no hara nada, debemos usar RouterOutlet
+
+Salida del enrutador
+RouterOutlet es una directiva de la biblioteca de enrutadores que se utiliza como un componente. 
+Actúa como un marcador de posición que marca el lugar en la plantilla donde el enrutador debe mostrar los componentes para esa salida.
+
+Dada la configuración anterior, cuando la URL del navegador para esta aplicación se convierte en /login
+el enrutador hace coincidir esa URL con la ruta de ruta /login y muestra LoginComponent como un elemento hermano del RouterOutlet
+que ha colocado en la plantilla del componente host.
+
+
+
+ACTIVAR LOS LINKS 
+
+segun la documentacion de angular debemos usar un atributo llamado routerLink, este toma el control sobre los elementos del mismo 
+al atributo le pasamos el valor que asignamos en la creacion de las rutas. vscode te permite instalar unos shortcuts que te traeran la directiva 
+mas rapido 
+
+[routerLink]="['/login']" debe quedar asi en el caso del login 
+
+esto debemos hacerlo con cada uno de los elementos que queramos enlazar.. de esta manera evitamos que cargue la pagina. lo cual nos convierte en una app spa 
+
+
+
+CREAR FORMULARIO DE REGISTRO
+
+para crear un formulario con angular debemos importar en el app.module. el modulo formsModule de angular/forms
+adicional a eso debemos agregarlo en la seccion de imports 
+
+debemos crear un formulario de html normal, en el componente que usaremos. aplicaremos las clases que deseemos. etc 
+en este caso recuerda que estamos usando boostrap lo cual hace el desarrollo mas rapido 
+
+luego de crear el formulario en html y agregarle los estilos css. pasamos al componente de este registro.
+importamos el modelo que usaremos, en este caso el de usuario
+
+import {users} from '../../models/users'; 
+
+creamos un atributo de tipo usuario   public user: users;  
+y en el constructor le agregamos parametros. en este punto instancimamos la clase, debemos pasarle los parametros que este nos pide 
+this.user = new users(1, '', '', '', '', '', 'USER', '')   lo rellenamos de esta manera, ya que el formulario se encargara de llenarlo  
+
+vamos al componente de registro html y al formulario le agregamos una serie de variables.
+esto lo hacemos agregando # antes del nombre de la variable en la vista #formularioRegistro="ngForm"
+
+adicional a eso cuando se produzca el evento onSubmit. llame a un metodo (ngSubmit)="onSubmit(formularioRegistro)"
+eso lo hacemos de esta manera 
+
+lo que dice la documentacion de angular respecto a ese metodo " El usuario debe poder enviar este formulario después de completarlo. 
+El botón Enviar en la parte inferior del formulario no hace nada por sí solo, pero activará el envío de un formulario debido a su tipo 
+(type = "submit").
+
+Un "envío de formulario" es inútil en este momento. 
+Para que sea útil, enlace la propiedad de evento ngSubmit del formulario al método onSubmit ()" esto es algo similar a si estuvieramos escuchando 
+el evento submit con js puro 
+
+seguido a eso debemos agregarle 
+
+Agregue enlaces similares [((ngModel)] y atributos.
+
+Agregó una interpolación de diagnóstico después de la etiqueta de entrada para que pueda ver lo que está haciendo.
+
+[(ngModel)]="user.name" de esta manera, esto nos ayudara a cargar la informacion que recibamos del formulario en el objeto usuario, y de manera inversa
+
+es indispensable que este escrito el nombre de la clase tal cual. ya que luego nos dara un error 
+
+Eliminará el mensaje de enlace del cuadro de entrada y agregará un nuevo enlace (en la parte superior) a la propiedad de diagnóstico del componente. 
+Luego puede confirmar que el enlace de datos bidireccional funciona para todo el modelo de héroe.
+
+esto hara que cuando modifiquemos el dato en el formulario, nos modifique tambien en el objeto
+
+aparte debemos crear la interpolacion para que cuando se cambie el elemento en el formulario cambie el objeto, debemos crear una variable en la vista de angular 
+esta vez en el elemento, con el fin de validar el elemento 
+
+<div [hidden]="name.valid || name.pristine"
+     class="alert alert-danger">
+  Name is required
+</div> 
+
+En este ejemplo, oculta el mensaje cuando el control es válido o impecable; "prístino" significa que el usuario no ha cambiado el valor desde que se mostró en este formulario.
+
+Esta experiencia de usuario es la elección del desarrollador. Algunos desarrolladores quieren que el mensaje se muestre en todo momento. Si ignora el estado original, ocultará el mensaje solo cuando el valor sea válido. Si llega a este componente con un nuevo héroe (en blanco) o un héroe no válido, verá el mensaje de error inmediatamente, antes de hacer nada.
+
+Algunos desarrolladores desean que el mensaje se muestre solo cuando el usuario realiza un cambio no válido. Ocultar el mensaje mientras el control es "impecable" logra ese objetivo. Verá la importancia de esta opción cuando agregue un nuevo héroe al formulario.
+
+angular no maneja un validador como laravel, en este caso debes crear tu validador. por lo cual debes usar la etiqueta pattern en html5 que recibe expreciones regulares
+pero no de una manera similar como js con sus clases 
+
+bueno ya luego de realizar las verificaciones,vamos a realizar una validacion adicional. no se habilita el boton de enviar a menos que esten llenos los campos 
