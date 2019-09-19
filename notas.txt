@@ -26,6 +26,7 @@ luego de instalar node debemos actualizar npm, lo hacemos con el comando npm ins
 
 luego de actualizar debemos borrar la cache de nmp con el siguiente comando npm cache clean --force, esto lo hacemos con el fin de evitar 
 que no se actualice algun paquete que deseemos, luego debemos desactivar las auditorias para evitar fallos 
+
 eso lo hacemos con el siguiente comando npm set audit false 
 
 luego debemos desintalar el cli de angular con los siguientes comandos npm uninstall -g angular-cli y 
@@ -53,6 +54,27 @@ Nota: angular usa typescript el cual es un lenguaje de programacion el cual es u
 para poder usar POO. pero debemos transpilarlo para que el navegador lo interprete, ya que ellos solo usan html css y js 
 
 
+para usar angular debemos saber cierta terminologia como componentes 
+
+COMPONENTES 
+
+Los componentes definen áreas de responsabilidad en la interfaz de usuario (UI) que le permiten reutilizar conjuntos de funcionalidades de UI. 
+Ya ha creado uno con el componente de lista de productos.
+
+Un componente consta de tres cosas:
+
+Una clase de componente que maneja datos y funcionalidad. En la sección anterior, los datos del producto y el método share () en la clase de componente manejan los datos y la funcionalidad respectivamente.
+
+Una plantilla HTML que determina la interfaz de usuario. En la sección anterior, la plantilla HTML de la lista de productos muestra el nombre, la descripción y un botón "Compartir" para cada producto.
+
+Estilos específicos de componentes que definen la apariencia. Aunque la lista de productos no define ningún estilo, aquí es donde reside el componente CSS.
+
+
+* ngFor hace que <div> se repita para cada producto de la lista.
+ngFor es una "directiva estructural". Las directivas estructurales dan forma o remodelan la estructura del DOM, típicamente agregando, eliminando y manipulando los elementos a los que están unidos. 
+Cualquier directiva con un * es una directiva estructural.
+
+
 INSTALAR DEPENDENCIA Y LIBRERIAS 
 
 jquery, boostrap, angular woala (editor de texto), angularfileuploader 
@@ -64,3 +86,78 @@ cortamos la ejecucion del serve y actualizamos con npm update. actualiza e insta
 
 "angular-froala-wysiwyg": "2.9.1", /*editor de codigo para el blog*/
     "angular-file-uploader": "4.1.4" /*plugin de subida de achivos*/ 
+
+luego de eso debemos añadir los paquetes al archivo angular.json, aqui agregamos los estilos y todo 
+
+"assets": [
+              "src/favicon.ico",
+              "src/assets"
+            ],
+            "styles": [
+              "src/styles.css"
+            ],
+            "scripts": [
+              "node_modules/froala-editor/js/froala_editor.min.js"
+            ]
+          },
+como puedes notar ahi se agrega. todos los paquetes se guardan en node_modules. entonces para agregarlo debemos hacerlo de la siguiente manera 
+
+por defecto ya viene cargado un style.css. lo que debemos hacer para agregar un archivo de un modelulo que hayamos descargado. es buscar en modulos. el elemento 
+y le pomenos la ruta relativa 
+
+"node_modules/froala-editor/css/froala_style.min.css" de esta manera quedaria. 
+
+si usamos angular-file-uploader.  no sera necesario cargarlo en angular.json 
+bueno luego de agregar estos plugins ya se puede iniciar el server y este empezara a compilarlo 
+
+instalamos jquery en el proyecto ya que algunos plugins como el editor de texto usan ese plugin 
+
+
+MODELOS 
+angular trabaja igualmente con el modelo-vista-controlador asi que debemos crear unos modelos, uno por cada tabla en la bd, sobre el cual crearemos objetos de este tipo 
+
+creamos la carpeta en la carpeta app que asi mismo esta en src. manejaremos el modelo mvc pero en vez de controladores usaremos componentes 
+
+creamos los modelos de manera similar a un archivo normal, solo que la extension debe ser .ts de typescript
+Nota: los nombre son en minuscula
+
+los modelos seran clases sobre los cuales crearemos objetos de este tipo (user, etc)
+
+usamos export para poder usar las variables y funcionalidades fuera del modulo actual 
+la informacion la podemos conseguir en el siguiente link
+http://javascript.info/modules-intro
+
+en este caso creamos una clase para poder exportarla. un modulo *
+
+
+como es de costrumbre creamos un construactor, pero los atributos los declararemos de namera diferente 
+
+no lo hacems como en js normal que creamos el constructor 
+
+constructor(params) {
+  this.params = params
+}
+
+si no en este caso declararemos los parametros directamente 
+constructor(
+        public id: number,
+        public name: string
+){} de esta manera, creamos los campos basados en la base de datos, lo mismo para cada uno de los modelos. 
+
+recuerda que typesript es mas fuertemente tipado que js por lo cual es indispensable declarar el tipo de datos. los tipos de datos que maneja 
+typescript son muy similares a los de lenguajes de programacion como c#, eso lo podemos ver 
+
+https://www.typescriptlang.org/docs/handbook/basic-types.html
+
+usaremos boostrap para agilizar el desarrollo del sitio 
+
+las imagenes las meteremos en una carpeta en la carpeta de assets, para meterla en el proyecto solo debemos especificar la ruta relativa de la misma
+
+CABECERA Y MENU
+
+basicamente creamos una barra de navegacion muy normal. no la realice con css puro ya que la parte movil da mucho trabajo 
+
+pero podemos crear el documento con html y css normal 
+
+
+COMPONENTES 
