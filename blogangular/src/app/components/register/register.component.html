@@ -1,10 +1,15 @@
 <div class="col-md-12 mt-5">
 
-    <h1>{{pageTitle}}</h1> 
-
     <p>Register to be able to comment and make posts!</p>
 
     <form #formularioRegistro="ngForm" (ngSubmit)="onSubmit(formularioRegistro)" >
+       
+        <div class="alert alert-success" *ngIf="estado == 'correcto'" >
+            Registration was successful
+        </div>
+        <div class="alert alert-danger" *ngIf="estado == 'error'" >
+            an error has occurred, check the information
+        </div>
 
         <div class="form-group">
             <label for="name">Name</label>
@@ -14,15 +19,15 @@
             </div>
         </div>
         <div class="form-group">
-            <label for="lastname">Last Name</label>
-            <input type="text" name="lastname" id="lastname" class="form-control" [(ngModel)]="user.lastName" #lastName="ngModel" pattern="[a-zA-Z]+" required placeholder="Snow">
+            <label for="lastName">Last Name</label>
+            <input type="text" name="lastName" id="lastName" class="form-control" [(ngModel)]="user.lastName" #lastName="ngModel" pattern="[a-zA-Z]+" required placeholder="Snow">
             <div [hidden]="lastName.valid || lastName.pristine" class="alert alert-danger" role="alert">
                Last Name is required
             </div>
         </div>
         <div class="form-group">
-            <label for="name">User Name</label>
-            <input type="text" name="username" id="username" class="form-control" [(ngModel)]="user.userName" placeholder="JohnSnow5" #userName="ngModel" required>
+            <label for="userName">User Name</label>
+            <input type="text" name="userName" id="userName" class="form-control" [(ngModel)]="user.userName" placeholder="JohnSnow5" #userName="ngModel" required>
             <div [hidden]="userName.valid || userName.pristine" class="alert alert-danger" role="alert">
                 User name is required and valid
             </div>
@@ -42,7 +47,7 @@
             </div>
         </div>
 
-        <input type="submit" value="Sign Up" class="btn btn-success">
+        <input type="submit" value="Sign Up" class="btn btn-success" [disabled]="formularioRegistro.invalid">
 
     </form>
 

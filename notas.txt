@@ -192,13 +192,15 @@ para llamarlo lo podemos hacer en app.component o cualquier otro componente que 
 estaremos creando el atributo de las paginas 
 
 
-asi mismo haremos con la seccion de 
+asi mismo haremos con la seccion de log y las demas 
+
+
 
 CONFIGURAR LAS RUTAS DE ANGULAR 
 
 haremos eso para que cada uno de los componentes que hemos creado sea una pagina independiente 
 
-debemos crear un nuevo archivo en app. que por convension puede ser routing.ts y debemos cargar diferentes modulos 
+debemos crear un nuevo archivo en  la carpeta app. que por convension puede ser routing.ts y debemos cargar diferentes modulos 
 
 import {ModuleWithProviders} from '@angular/core'; //permite cargar como servicio las cosas del router 
 import {Routes, RouterModule} from '@angular/router'; //clases y librerias del router 
@@ -210,8 +212,15 @@ import {RegisterComponent } from './components/register/register.component'; de 
 luego debemos instanciar el servicio Router, debemos crear una constante de tipo routes la cual sera un array, dentro del array ingresaremos las rutas
 rutas que tendra la aplicacion, esta ira relacionanda con un componente. esto va incluido en un objeto json 
 
-{path: 'login', component: LoginComponent}, de esta manera. en el path aparacera la extenion que tendra en la url el componente 
-myapp.com/login  
+const appRoutes: Routes= [
+    {path: 'home', component: HomeComponent},
+    {path: 'login', component: LoginComponent},
+    {path: 'register', component: RegisterComponent},
+    {path: '', component: HomeComponent},//ruta por defecto al abrir el sitio 
+    {path: '**', component: ErrorComponent} //esta ruta se usa cuando no haya ninguna valida, despliega un error
+]
+
+de esta manera. en el path aparacera la extenion que tendra en la url el componente myapp.com/login  
 
 segun la documentacion de angular. es necesario poner la ruta ** o sea la ruta no valida. al final de todo 
 
@@ -219,18 +228,6 @@ luego de eso debemos exportar dos elementos, la rutas y la configuracion
 export const appRoutingProviders: any[] = []; //para cargar las rutas como servicios
 
 .luego exportaremos el modulo de las rutas, o sea la configuracion que hicimos hace poco en la documentacion de angular. esta llama una funcion 
-@NgModule({
-  imports: [
-    RouterModule.forRoot(
-      appRoutes,
-      { enableTracing: true } // <-- debugging purposes only
-    )
-    // other imports here
-  ],
-  ...
-})
-
-ESTE PASO DEBEMOS HACERLO PARA CARGARLO EN APP MODULE
 
 pero en nuestro ejemplo crearemos una constante y la exportamos, de tipo ModuleWithProviders e instanciaremos RouterModule. ya como aparece en el ejemplo de arriba
 RouterModule.forRoot(appRoutes). el parametro que recibe es la constante de tipo Routes que creamos con las rutas 
@@ -239,6 +236,7 @@ https://angular.io/guide/router toda la informacion de como hacerlo lo encontrar
 
 quedaria asi  export const Routing: ModuleWithProviders = RouterModule.forRoot(appRoutes);
 
+ESTE PASO DEBEMOS HACERLO PARA CARGARLO EN APP MODULE
 
 ahora debemos abrir app.module.ts para cargar la informacion. ya en este punto debemos importar las constantes generadas en el archivo de rutas 
 luego cargamos los modulos, en la seccion imports 
@@ -264,6 +262,10 @@ Actúa como un marcador de posición que marca el lugar en la plantilla donde el
 Dada la configuración anterior, cuando la URL del navegador para esta aplicación se convierte en /login
 el enrutador hace coincidir esa URL con la ruta de ruta /login y muestra LoginComponent como un elemento hermano del RouterOutlet
 que ha colocado en la plantilla del componente host.
+
+esto es una etiqueta que nos ayudara a mostrar los componentes que hemos indicado dependiendo la ruta creada anteriormente
+{path: 'login', component: LoginComponent}, en caso de estar myApp.com/login. esta nos mostrara el componente login 
+
 
 
 
@@ -320,6 +322,8 @@ Agregó una interpolación de diagnóstico después de la etiqueta de entrada pa
 
 es indispensable que este escrito el nombre de la clase tal cual. ya que luego nos dara un error 
 
+ADICIONAL ES INDISPENSABLE QUE CADA CAMPO TENGA UN NOMBRE Y UN ID. 
+
 Eliminará el mensaje de enlace del cuadro de entrada y agregará un nuevo enlace (en la parte superior) a la propiedad de diagnóstico del componente. 
 Luego puede confirmar que el enlace de datos bidireccional funciona para todo el modelo de héroe.
 
@@ -343,3 +347,144 @@ angular no maneja un validador como laravel, en este caso debes crear tu validad
 pero no de una manera similar como js con sus clases 
 
 bueno ya luego de realizar las verificaciones,vamos a realizar una validacion adicional. no se habilita el boton de enviar a menos que esten llenos los campos 
+
+[disabled]="formularioRegistro.invalid" de esta manera hacemos que si el formularo es invalido, desabilite el boton, por eso es necesario crearle una variable al mismo 
+
+para resetear el formulario existe la funcionalidad reset. en el ejemplo que estamos haciendo. al dar click en submit, este creara una funcion la cual le pasaremos 
+como parametro, la variable del formulario que contiene todos los datos del objeto creado. esta funcion estara en el component.ts de register que es la clase que estamos manejando, al declararla 
+
+(ngSubmit)="onSubmit(formularioRegistro)
+
+onSubmit(form){
+    console.log(this.user);
+    form.reset()
+  }
+
+  de esta manera. podremos imprimir el objeto ademas de recetear el formulario 
+
+  en el siguiente link encontraremos la documentacion para hacer un formulario 
+  https://angular.io/guide/forms#introduction-to-template-driven-forms
+
+
+CREAR UN SERVICIO DE USUARIO 
+
+crear un metodo para hacer una peticion ajax al backend 
+
+debemos cargar un modulo en app.modules llamado HttpClientModule de @angular/common/http
+
+luego este debemos cargarlo en imports. es muy importante que se cargue debajo del modulo del navegador
+
+
+ahora crearemos un servicio. una clase que tendra todos los metodos con las peticiones ajax hacia la api del backend, estaremos creando una por cada modelo que tengamos, 
+los tendremos en una carpeta
+
+importaremos unos modulos. 
+
+injectable de from @angular/core
+el modulo httpClient de @angular/common/http
+aparte importamos  httpheaders para manejar las cabeceras tambien de  @angular/common/http
+tambien debemos importar un modulo llamado observable, segun la documentacion de angular es necesario si se usa httpclient 
+RxJS es una biblioteca para componer código asíncrono y de devolución de llamada en un estilo funcional y reactivo. Muchas API angulares, incluido HttpClient, producen y consumen RxJS Observables.
+por ultimo importamos el modelo de usuario 
+
+seguido debemos llamar el decorador inyectable para que se pueda usar como servicio , @inyectable seguido a eso creamos una clase y la exportamos 
+creamos el contrsuctor y le pasamos la propiedad publica http client
+
+@Injectable()
+export class configServiceUser{
+    constructor(public http: HttpClient ){
+}
+
+luego debemos importar el servicio en el componente que estamos usando con los usuarios en este caso. 
+
+import { configServiceUser } from '../../services/user.service';
+
+RECUERDA QUE EN IMPORT VA EL NOMBRE DE LA CLASE 
+
+el siguiente paso que debemos realizar el inyectar la dependencia en el componente
+añadimos una propiedad de providers debajo de las url, abrimos llaves y ponemos el nombre de nuestro modulo 
+
+ya realizado esto, debemos cargar en los parametros del constructor de este componeten(register)
+el user service (private serviceUser: configServiceUser) de esta manera 
+
+
+REGISTRAR USUARIO 
+como recomendacion creamos un archivo para guardar configuraciones generales. como la url del api. 
+en este caso lo cree en la misma carpeta service, creare un objeto el cual contendra la url de la api y lo exportare. la añadimos al services
+y creamos una propiedad publica para tomar la url , esta la agregaremos en el constructor. nos permitira acceder a la url desde donde queramos 
+
+ahora seguiremos la documentacion de angular. segun esta para hacer un Post request, debemos crear una funcion y debemos pasarle un objeto como parametro 
+en este caso usuario 
+
+adicional a eso, recuerda que estamos haciendo el backend separado. por lo cual debemos convertir el usuario en json antes de enviarlo. si no nos dara error 
+adicional a eso, debemos enviarle con la llave 'json', para eso creamos una variable y le agregamos el string 'json' adicional a que le concatenamos el objeto antes visto 
+
+luego configuramos los header, para eso segun la documentacion de angular, debemos instanaciar la clase HttpHeaders 
+esta recibe unos parametros como en un objeto json 
+https://angular.io/guide/http#http-headers
+
+let headers = new HttpHeaders({'content-type': 'application/x-www-form-urlencoded'}) esta es la manera de instanciar la cabecera
+parece que no nos permite modificar el header de esta manera por lo cual debemos agregarle un aparametro adicional que es set 
+
+ahora si podemos hacer el return de la funcion, la cual le pasaremos el objeto httpClient, 
+recuerda que a la url debemos agregarle la ruta de los metodos para poder acceder a la api, luego pasamos el contenido, qu en este caso es el json
+las cabeceras de igual forma las pasaremos por unas cabeceras 
+
+addUser(user: user): Observable<any>{
+        //recibimos los datos de usuario y los convertirmos en json 
+        let userJson = JSON.stringify(user); 
+        
+        //agregamos la llave que nos pedira la api, en este caso es 'json'. seguido concatenamos el json ya creado 
+        let params = `json=${userJson}`;
+       
+        //instanciamos la clase httpheaders 
+        let headers = new HttpHeaders().set('content-type', 'aplication/x-www-form-urlencoded');
+
+        return this.http.post(`${this.url}register`, params, {headers: headers})
+
+}
+
+es indispensable que ya que usamos una llave en el json, que en este caso es json, debemos agregarle el = antes del objeto json. si no 
+nos dara un error  let params = `json=${userJson}`; aqui 
+
+de esta manera quedaria, es indispensable no usar header en la cabecera ya que esta no te dejara continuar.
+
+bueno esta funcion hara una peticion ajax y nos retornara un observable donde tendremos los datos o el error que nos enviara la api 
+
+ahora lo que tenemos que hacer es llamar la funcion anterior en el metodo onsubmit de nuestro component
+luego de llamarla debemos pasarle una funcion adicional, esta vez es la funcion suscribe que retorna dos funciones callback 
+response y error 
+
+https://angular.io/guide/http#error-handling en el siguiente link encontraremos un poco de informacion sobre este metodo 
+
+onSubmit(form){
+    this.serviceUser.addUser(this.user).subscribe(//con este metodo tomamos la informacion que nos envia el api de vuelta 
+      response => console.log(response),
+      error => console.log(error)
+    
+    )
+    form.reset();
+  }
+quedaria de esta manera 
+
+ya en este punto podemos usar la api, en el momento me encuentro con un error. me retorna que los campos no son validos
+asi que verificare que sucede 
+
+EL ERROR ESTABA AL MOMENTO DE ENVIAR LOS PARAMETROS, DEBEMOS AGREGARLE UN = DESPUES DE LA LLAVE, AL ENVIAR LOS PARAMETROS QUEDARAN NULL
+
+
+ahora tomaremos una propiedad la cual recibira el codigo que nos enviara la api, para tomar la respuesta usamos el objeto response 
+
+if(response.codigo == 200){
+          this.estado = response.codigo
+          form.reset();
+        }else{
+          this.estado = 400
+        }
+
+de esta manera, luego podemos ir a la vista y hacer una directiva condicional. eso lo hacemos con ngIf
+
+https://angular.io/api/common/NgIf#description  en esta parte de la documentacion podremos ver como funciona esta directiva 
+
+en este caso  *ngIf="estado == 200" sera asi. creamos en la clase de registro una propiedad publica que contendra el estado, en caso de ser 200 
+como lo sobre escribimos con el if de arriba, entonces se mostrara un mensaje correcto 
