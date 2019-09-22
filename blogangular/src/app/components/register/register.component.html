@@ -5,7 +5,7 @@
     <form #formularioRegistro="ngForm" (ngSubmit)="onSubmit(formularioRegistro)" >
        
         <div class="alert alert-success" *ngIf="estado == 'correcto'" >
-            Registration was successful
+            Registration was successful  <a [routerLink]="[ '/login' ]">login here</a><!--link para el login-->
         </div>
         <div class="alert alert-danger" *ngIf="estado == 'error'" >
             an error has occurred, check the information

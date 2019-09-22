@@ -12,7 +12,7 @@ import {user} from '../../models/users';
 export class RegisterComponent implements OnInit {
 
   public pageTitle: string; 
-  public user: user = new user(1, '', '', '', '', '', 'USER', ''); 
+  public user: user = new user(1, '', '', '', '', '', 'USER', '',''); 
   public estado: string; 
 
   constructor(private serviceUser: configServiceUser) {

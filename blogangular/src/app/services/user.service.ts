@@ -29,4 +29,25 @@ export class configServiceUser{
 
     }
 
+    //pasamos como parametro el objeto que estaremos enviando
+    login(user: user, getToken = null): Observable<any>{
+
+        //el api nos retorna el usuario decodificado en caso de ser true 
+        if(getToken != null){
+            user.getToken = 'true'; 
+        }
+
+        //este objeto lo convertimos en un json y le agreamos la llave correspondiente 
+        let json = JSON.stringify(user); 
+
+        let params = `json=${json}`;
+
+        //instanciamos el objeto httpHeader que contendra las cabeceras 
+        let cabeceras = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded'); 
+
+        //retornamos toda la informacion 
+        return this.http.post(`${this.url}login`, params, {headers: cabeceras});
+
+    }
+
 }

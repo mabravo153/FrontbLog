@@ -1,4 +1,5 @@
 export class user{
+    
 
     constructor(
         public id: number,
@@ -8,8 +9,8 @@ export class user{
         public email: string,
         public password: string,
         public role: string,
-        public image: string 
-
+        public image: string,
+        public getToken: string
     ){}
 
 }

@@ -286,7 +286,7 @@ CREAR FORMULARIO DE REGISTRO
 para crear un formulario con angular debemos importar en el app.module. el modulo formsModule de angular/forms
 adicional a eso debemos agregarlo en la seccion de imports 
 
-debemos crear un formulario de html normal, en el componente que usaremos. aplicaremos las clases que deseemos. etc 
+debemos crear un formulario de html normal, en el componente que usaremos. aplicaremos las clases de css que deseemos. etc 
 en este caso recuerda que estamos usando boostrap lo cual hace el desarrollo mas rapido 
 
 luego de crear el formulario en html y agregarle los estilos css. pasamos al componente de este registro.
@@ -301,8 +301,8 @@ this.user = new users(1, '', '', '', '', '', 'USER', '')   lo rellenamos de esta
 vamos al componente de registro html y al formulario le agregamos una serie de variables.
 esto lo hacemos agregando # antes del nombre de la variable en la vista #formularioRegistro="ngForm"
 
-adicional a eso cuando se produzca el evento onSubmit. llame a un metodo (ngSubmit)="onSubmit(formularioRegistro)"
-eso lo hacemos de esta manera 
+adicional a eso cuando se produzca el evento ngSubmit. llame a un metodo onSubmit, el cual crearemos en el component.ts 
+eso lo hacemos de esta manera  (ngSubmit)="onSubmit(formularioRegistro)"
 
 lo que dice la documentacion de angular respecto a ese metodo " El usuario debe poder enviar este formulario después de completarlo. 
 El botón Enviar en la parte inferior del formulario no hace nada por sí solo, pero activará el envío de un formulario debido a su tipo 
@@ -332,6 +332,8 @@ esto hara que cuando modifiquemos el dato en el formulario, nos modifique tambie
 aparte debemos crear la interpolacion para que cuando se cambie el elemento en el formulario cambie el objeto, debemos crear una variable en la vista de angular 
 esta vez en el elemento, con el fin de validar el elemento 
 
+los nombres a verificar, son los nombres de las variables. en este caso la variable tiene como nombre #name
+
 <div [hidden]="name.valid || name.pristine"
      class="alert alert-danger">
   Name is required
@@ -348,7 +350,10 @@ pero no de una manera similar como js con sus clases
 
 bueno ya luego de realizar las verificaciones,vamos a realizar una validacion adicional. no se habilita el boton de enviar a menos que esten llenos los campos 
 
+
 [disabled]="formularioRegistro.invalid" de esta manera hacemos que si el formularo es invalido, desabilite el boton, por eso es necesario crearle una variable al mismo 
+
+antes de poner eso debemos poner que el campo es requerido y agregarle cualquier validacion que hagamos con pattern 
 
 para resetear el formulario existe la funcionalidad reset. en el ejemplo que estamos haciendo. al dar click en submit, este creara una funcion la cual le pasaremos 
 como parametro, la variable del formulario que contiene todos los datos del objeto creado. esta funcion estara en el component.ts de register que es la clase que estamos manejando, al declararla 
@@ -373,7 +378,6 @@ crear un metodo para hacer una peticion ajax al backend
 debemos cargar un modulo en app.modules llamado HttpClientModule de @angular/common/http
 
 luego este debemos cargarlo en imports. es muy importante que se cargue debajo del modulo del navegador
-
 
 ahora crearemos un servicio. una clase que tendra todos los metodos con las peticiones ajax hacia la api del backend, estaremos creando una por cada modelo que tengamos, 
 los tendremos en una carpeta
@@ -402,10 +406,14 @@ import { configServiceUser } from '../../services/user.service';
 RECUERDA QUE EN IMPORT VA EL NOMBRE DE LA CLASE 
 
 el siguiente paso que debemos realizar el inyectar la dependencia en el componente
-añadimos una propiedad de providers debajo de las url, abrimos llaves y ponemos el nombre de nuestro modulo 
+añadimos una propiedad de providers debajo de las url, abrimos llaves y ponemos el nombre de nuestro modulo. el que importamos 
+
+styleUrls: ['./login.component.css'],
+providers: [configServiceUser]
 
 ya realizado esto, debemos cargar en los parametros del constructor de este componeten(register)
 el user service (private serviceUser: configServiceUser) de esta manera 
+
 
 
 REGISTRAR USUARIO 
@@ -473,10 +481,10 @@ asi que verificare que sucede
 EL ERROR ESTABA AL MOMENTO DE ENVIAR LOS PARAMETROS, DEBEMOS AGREGARLE UN = DESPUES DE LA LLAVE, AL ENVIAR LOS PARAMETROS QUEDARAN NULL
 
 
-ahora tomaremos una propiedad la cual recibira el codigo que nos enviara la api, para tomar la respuesta usamos el objeto response 
+ahora tomaremos dentro de la funcion response,  una propiedad la cual recibira el codigo que nos enviara la api, para tomar la respuesta usamos el objeto response 
 
-if(response.codigo == 200){
-          this.estado = response.codigo
+if(response.estado == 'correcto'){
+          this.estado = response.estado
           form.reset();
         }else{
           this.estado = 400
@@ -484,7 +492,71 @@ if(response.codigo == 200){
 
 de esta manera, luego podemos ir a la vista y hacer una directiva condicional. eso lo hacemos con ngIf
 
+creamos una propiedad publica, la cual estaremos usando para validar usando ngIf()
+
 https://angular.io/api/common/NgIf#description  en esta parte de la documentacion podremos ver como funciona esta directiva 
 
-en este caso  *ngIf="estado == 200" sera asi. creamos en la clase de registro una propiedad publica que contendra el estado, en caso de ser 200 
-como lo sobre escribimos con el if de arriba, entonces se mostrara un mensaje correcto 
+en el componente html. crearemos unos div que seran nuestra alerta 
+Nota: al usar ngIf, si una condicion se cumple esta se ejecuta. por ejemplo, estado es diferente a a error, lo cual  *ngIf="estado != 'error'"
+esta ejecutara el codigo, en este caso mostrar un div 
+
+
+FORMULARIO DE LOGIN 
+
+imagino que haremos algo similar a el registro, crearemos en el component html el formulario de html. y le agregaremos los estilos css 
+
+para agilizar el desarrollo usaremos los formularios de login de boostrap. 
+
+luego de eso debemos ir al component.ts crear el objeto de usuario, crear la funcion onSubmit. es importante que esta este en la etiqueta formulario. en caso contrario 
+nos dara un error, adicional a eso debemos crear la variable cuyo nombre debe ser el mismo que usemos al momento de mstrar u ocultar el mensaje de error 
+
+aqui tenemos un ejemplo de la variable.  #userNameLogin="ngModel"   
+
+y aqui tenemos un ejemplo de la validacion 
+<div [hidden]="userNameLogin.valid || userNameLogin.pristine" class="alert alert-danger">
+
+antes de realizar este paso debemos tener en cuenta que tenemos que tener validaciones en el html como el atributo required o pattern
+
+luego debemos importar el servicio en el componente que estamos usando con los usuarios en este caso. 
+
+import { configServiceUser } from '../../services/user.service';
+
+RECUERDA QUE EN IMPORT VA EL NOMBRE DE LA CLASE 
+
+el siguiente paso que debemos realizar el inyectar la dependencia en el componente
+añadimos una propiedad de providers debajo de las url, abrimos llaves y ponemos el nombre de nuestro modulo. el que importamos 
+
+styleUrls: ['./login.component.css'],
+providers: [configServiceUser]
+
+ya realizado esto, debemos cargar en los parametros del constructor de este componeten(login)
+el user service (private serviceUser: configServiceUser) de esta manera 
+
+luego de eso creamos el metodo en el serviceUser, recuerda que la api que desarrollamos tiene la capacidad de retornar el usuario identidicado o el token que se 
+crea al loguearlo. el usuario identificado se pasa cuando la funcion envia un parametro adicional. recuerda eso  
+
+debemos crear una funcion muy similar a esta 
+login(user: user, getToken = null): Observable<any>{
+
+        //el api nos retorna el usuario decodificado en caso de ser true 
+        if(getToken != null){
+            user.getToken = 'true'; 
+        }
+
+
+        //este objeto lo convertimos en un json y le agreamos la llave correspondiente 
+        let json = JSON.stringify(user); 
+
+        let params = `json=${json}`;
+
+        //instanciamos el objeto httpHeader que contendra las cabeceras 
+        let cabeceras = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded'); 
+
+        //retornamos toda la informacion 
+        return this.http.post(`${this.url}/login`, params, {headers: cabeceras});
+
+}
+como podemos notar, debemos agregar un campo adicional a usuario que es getToken, bueno en caso ya de haber terminado la creacion del metodo, 
+llamamos la funcion login en el component.ts 
+
+DEBES TENER EN CUENTA, QUE NO DEBES AGREGARLE UNA BARRA INCLINADA A LA URL YA QUE ESTA YA LA TRAE LA CUAL COPIAMOS DESDE LA URL EN EL ARCHIVO GLOBAL 
