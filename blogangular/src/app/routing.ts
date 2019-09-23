@@ -16,6 +16,7 @@ const appRoutes: Routes= [
     {path: 'home', component: HomeComponent},
     {path: 'login', component: LoginComponent},
     {path: 'register', component: RegisterComponent},
+    {path: 'logout/:sure', component: LoginComponent},
     {path: '', component: HomeComponent},//ruta por defecto al abrir el sitio 
     {path: '**', component: ErrorComponent} //esta ruta se usa cuando no haya ninguna valida, despliega un error
 ]

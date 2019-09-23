@@ -560,3 +560,135 @@ como podemos notar, debemos agregar un campo adicional a usuario que es getToken
 llamamos la funcion login en el component.ts 
 
 DEBES TENER EN CUENTA, QUE NO DEBES AGREGARLE UNA BARRA INCLINADA A LA URL YA QUE ESTA YA LA TRAE LA CUAL COPIAMOS DESDE LA URL EN EL ARCHIVO GLOBAL 
+
+luego de eso debemos ejeutarlo en la funcion onSubmit de nuestra clase(component) 
+esta funcion recibe dos clases de funcion callback. la primera es response y la otra es error 
+response almacena toda la respuesta que nos traiga la api sea un error de validacion o la respuesta que esperamos 
+error trae los posibles errores de sintaxis que este tenga. en el desarrollo es bueno capturarlo. 
+
+debemos crear dos propiedades, una para el usuario identificado y otra para el token  que nos envia. 
+
+lo que haremos en response, sera verificar que la respuesta no sea un error (enviado por la api)
+en caso que no. cambiamos la propiedad estado a correcto y guardamos el token
+en este punto la funcion no se le agrego el segundo parametro getToken, por lo cual esta nos retorna solo el token 
+luego de capturar el token. lo que haremos sera ejecutar nuevamente la funcion esta vez pasandole el parametro getToken como true, esto con el fin 
+de que nos traiga el usuario identificado 
+
+ this.serviceUser.login(this.user).subscribe(
+
+      response => {
+        
+        if(response.respuesta != 'error'){
+          this.estado = 'correcto'; 
+          this.token = response
+
+          this.serviceUser.login(this.user, true).subscribe(
+
+            response => {
+            
+                this.userIdenty = response
+            
+              console.log(this.token);
+              console.log(this.userIdenty);
+              
+            }, 
+            error => {
+             this.estado = `error`;        
+            }
+      
+          )
+
+        }else{
+          this.estado = `Usuario no identificado `
+        }
+        
+      }, 
+      error => {
+       this.estado = `error ${error}`;        
+      }
+la funcion completa quedaria asi, (con unas pequeñas modificaciones)
+
+
+
+PERSISTIR LOS DATOS DE LOGIN DE USUARIO 
+para hacer eso podemos usar el local storage, es una especia de sesion o memoria que tiene el navegador web 
+lo podemos guardar en string o number 
+
+lo hacemos usando el objeto localstorage, esto es un elemento que usa js. el mismo es un elemento que almacena informacion en un par clave valor
+hace persistir la informacion apesar de haber reiniciado el navegador 
+
+para agregar un item al localstorage es muy facil. podemos usar el metodo setItem y para retornarlo. l metodo getItem
+
+en el siguiete link encontraremos mas informacion http://javascript.info/localstorage
+
+como dice la documentacion de la misma, este solo guarda string. por lo que debemos convertir a json el objeto de js 
+
+localStorage.setItem('userIdentify', JSON.stringify(this.userIdenty)); de esta manera 
+
+
+METODOS PARA SACAR TOKEN Y USUARIO IDENTIFICADO EN CUALQUIER COMPONENTE 
+
+en el services de usuario, crearemos el metodo getToken y getUserIdentify 
+
+la forma de hacerlo es muy sencillo podemos usar un metodo del objeto localStorage, getItem(). en este caso como estamos retomando en el objeto en json 
+debemos convertirlo a un objeto de js comun y corriente. por lo cual usamos JSON.parse() para convertirlo en json 
+
+luego verificamos si existe y no es undefined, en caso que no. asignamoos el objeto decodificado del json a la propiedad publica que hemos creado anteriormente en la clase 
+
+hacemos lo mismo localstorage del token y lo retornamos. 
+
+getToken(){
+    let tokenUser = localStorage.getItem('token');
+
+  (tokenUser && tokenUser != undefined)? this.token = tokenUser : this.token = null; 
+      return this.token
+
+}
+
+
+ahora. como estamos usando la barra de navegacion del blog en el app.component, ahi debemos importar el services, añadir el provider
+y agregar la propiedad privada en los parametros del constructor, luego de eso accedemos al metodo que vayamos a usar, getUserIdentify.
+creamos una propiedad la cual tendra el usuario identificado y el token en caso de necesitarlo. ya al tener el objeto en una propiedad 
+del cmponent.ts lo podemos usar en el component.html, ya lo unico que tenemos qe hacer aqui es acceder a la propiedad del objeto y listo 
+
+para agrearle mas interactividad a la pagina, usaremos la directiva ngIf para mostrar el menu solo cuando el usuario este identificado. en caso que no 
+se ocultara. lo mismo con el menu de login y creaccion de usuario 
+
+
+
+CERAR SESION 
+primero crearemos una ruta en el archivo de rutas, crearemos una ruta logout la cual tendra adicional un parametro 
+
+Nota: los parametros en las rutas los pasamos con :. por ejemplo, logout/:sure 
+
+
+y mostraremos como componente el login, aqui tendremos un metodo que solo se ejecutara cuando se active esa ruta y lleve un parametro 
+
+luego de crear la ruta, debemos ir al componente de login. importaremos tres clases. debemos importat 
+Router, ActivatedRoute, Params(sacar parametros de la url), luego lo cargamos en los parametros del constructor 
+el contructor 
+
+luego de hacer esto, ya podemos crear el cuerpo del metodo logout
+para crear el cuero debemos llamar al objeto ActivatedRoute. 
+
+Nota: Proporciona acceso a información sobre una ruta asociada con un componente que se carga en una salida. 
+
+este maneja un metodo lamado Params, Un observable de los parámetros de la matriz en el ámbito de esta ruta.
+
+al ser un observable debemos usar el metodo suscribe. este nos devuelve una funcion de callback. esta funcion e callback recibe como nombre
+
+params, seguido a eso debemos crear una variable dentro de la funcion y acceder al indice sure(el parametro de la ruta)
+
+de esta manera capturamos el valor que nos pasa el parametro, le asignaremos un valor de 1 por lo cual validaremos que en caso de ser 1, destruimos el elemento que hemos guardado 
+en el local storage adicional a eso, las propiedades creadas en esta clase. debemos volverlas null 
+
+luego redirigiremos a la pagina de login, usando la clase Router 
+
+Nota: Un servicio que proporciona capacidades de navegación y manipulación de URL.
+
+esta clase tiene un metodo llamado navigate() este recibe un array pero solo le pasaremos la direccion del login 
+
+recuerda que todos los metodos hay que llamarlos,estas clases manejan un metodo llamado ngonInit, el cual se ejecuta apenas se 
+se carga, lo cual sera una buena mnera de ejecutar el codigo, pero solo se desloguea si se enva el parametro 
+
+luego de hacer esto solo debemos agregarle el link a el enlace de logout en el menu desplegable del componente 

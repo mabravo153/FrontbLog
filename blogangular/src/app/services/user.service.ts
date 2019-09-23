@@ -8,6 +8,8 @@ import { global } from './global';
 export class configServiceUser{
 
     public url:string;
+    public Identity; 
+    public token; 
 
     constructor(public http: HttpClient ){
         this.url = global.urlApi; 
@@ -47,6 +49,26 @@ export class configServiceUser{
 
         //retornamos toda la informacion 
         return this.http.post(`${this.url}login`, params, {headers: cabeceras});
+
+    }
+
+
+    
+    getUserIdentity(){
+        let userIdentity = JSON.parse(localStorage.getItem('userIdentify')); 
+
+        (userIdentity != undefined &&  userIdentity)? this.Identity = userIdentity : this.Identity = null;
+
+        return this.Identity;
+    }
+
+
+    getToken(){
+        let tokenUser = localStorage.getItem('token');
+
+        (tokenUser && tokenUser != undefined)? this.token = tokenUser : this.token = null; 
+
+        return this.token
 
     }
 

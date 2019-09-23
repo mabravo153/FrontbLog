@@ -2,6 +2,13 @@
 
   <h1>{{pageTitle}}</h1>
 
+  <div class="alert alert-success" role="alert" *ngIf="estado == 'correcto'">
+    User logged in
+  </div>
+  <div class="alert alert-danger" role="alert" *ngIf="estado == 'error'">
+    unidentified user or network error
+  </div>
+
   <form #formulariologin="ngForm" (ngSubmit)="onSubmit(formulariologin)" class="mt-3">
     <div class="form-group">
       <label for="userName">User name</label>

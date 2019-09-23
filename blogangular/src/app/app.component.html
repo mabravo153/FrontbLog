@@ -17,7 +17,7 @@
         </li>
       </ul>
       
-      <ul class="navbar-nav navbar-right">
+      <ul class="navbar-nav navbar-right" *ngIf="!userIdentity && !userIdentity.name">
         <li class="nav-item active">
           <a class="nav-link" [routerLink]="['/login']">Sign In</a>
         </li>
@@ -26,11 +26,11 @@
         </li>
       </ul>
 
-      <ul class="navbar-nav navbar-right">
+      <ul class="navbar-nav navbar-right" *ngIf="userIdentity && userIdentity.name">
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
             aria-haspopup="true" aria-expanded="false">
-            User
+            {{userIdentity.name}}
           </a>
           <div class="dropdown-menu" aria-labelledby="navbarDropdown">
             <a class="dropdown-item" href="#">Create post</a>
@@ -38,7 +38,7 @@
             <div class="dropdown-divider"></div>
             <a class="dropdown-item" href="#">My profile</a>
             <a class="dropdown-item" href="#">settings</a>
-            <a class="dropdown-item" href="#">log out</a>
+            <a class="dropdown-item" [routerLink]="[ '/logout/1' ]">log out</a>
           </div>
         </li>
       </ul>
