@@ -55,6 +55,7 @@ export class LoginComponent implements OnInit {
               localStorage.setItem('token', this.token); 
               localStorage.setItem('userIdentify', JSON.stringify(this.userIdenty));
             
+              this._router.navigate(['home'])
               
             }, 
             error => {
@@ -81,9 +82,7 @@ export class LoginComponent implements OnInit {
    }
 
   ngOnInit() {
-
     this.logOut();
-
   }
 
   logOut(){

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, DoCheck, OnInit } from '@angular/core';
 import { configServiceUser } from './services/user.service';
 
 @Component({
@@ -7,14 +7,27 @@ import { configServiceUser } from './services/user.service';
   styleUrls: ['./app.component.css'],
   providers: [configServiceUser]
 })
-export class AppComponent {
+export class AppComponent implements OnInit, DoCheck {
   title = 'blogangular';
 
   public userIdentity; 
   public token; 
 
   constructor(private serviceProvider: configServiceUser) {
+    this.loadUser()
+  }
+
+  ngOnInit(){
+
+  }
+
+  ngDoCheck(){ //con este se actualiza ese mismo metodo 
+    this.loadUser() //con este metodo cargamos el token de usuario y contraseña que esten en el localstorage o no 
+  }
+
+  loadUser(){
     this.userIdentity = this.serviceProvider.getUserIdentity();
+    this.token = this.serviceProvider.getToken();
   }
 
 }
