@@ -27,10 +27,6 @@ export class LoginComponent implements OnInit {
    }
 
 
-  get diagnostico(){
-     return JSON.stringify(this.user); //funcion que nos muestra que recibe el usuario 
-   }
-
    onSubmit(){
     //estamos instanciando la clase que contiene el metodo para enviar la informacion de usuario  
     this.serviceUser.login(this.user).subscribe(

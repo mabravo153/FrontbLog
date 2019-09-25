@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient,  HttpHeaders}  from '@angular/common/http';
 import { Observable } from 'rxjs';
 import {user} from '../models/users';
-import { global } from './global';  
+import { global } from './global';  //tenemos la url de la api 
 
 @Injectable()
 export class configServiceUser{
@@ -53,7 +53,7 @@ export class configServiceUser{
     }
 
 
-    
+    //tomamos la identidad del usuario en el local storage 
     getUserIdentity(){
         let userIdentity = JSON.parse(localStorage.getItem('userIdentify')); 
 
@@ -62,7 +62,7 @@ export class configServiceUser{
         return this.Identity;
     }
 
-
+    //tomamos la el token usuario en el local storage
     getToken(){
         let tokenUser = localStorage.getItem('token');
 
@@ -72,4 +72,17 @@ export class configServiceUser{
 
     }
 
+    updateUser(user: user, token): Observable<any>{
+
+        let usuario = JSON.stringify(user); 
+        let key = `json=${usuario}`; 
+
+        let header = new HttpHeaders({
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'Auth': token
+        })
+                                      
+
+        return this.http.put(`${this.url}update`, key, {headers: header});  
+    }
 }

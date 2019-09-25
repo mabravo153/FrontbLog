@@ -13,14 +13,14 @@
 
         <div class="form-group">
             <label for="name">Name</label>
-            <input type="text" name="name" id="name" class="form-control" [(ngModel)]="user.name" #name="ngModel" required pattern="[a-zA-Z]+" placeholder="John">
+            <input type="text" name="name" id="name" class="form-control" [(ngModel)]="user.name" #name="ngModel" required pattern="[a-zA-Z ]+" placeholder="John">
             <div [hidden]="name.valid || name.pristine" class="alert alert-danger" role="alert">
                 Name is required
             </div>
         </div>
         <div class="form-group">
             <label for="lastName">Last Name</label>
-            <input type="text" name="lastName" id="lastName" class="form-control" [(ngModel)]="user.lastName" #lastName="ngModel" pattern="[a-zA-Z]+" required placeholder="Snow">
+            <input type="text" name="lastName" id="lastName" class="form-control" [(ngModel)]="user.lastName" #lastName="ngModel" pattern="[a-zA-Z ]+" required placeholder="Snow">
             <div [hidden]="lastName.valid || lastName.pristine" class="alert alert-danger" role="alert">
                Last Name is required
             </div>

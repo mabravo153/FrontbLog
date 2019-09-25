@@ -355,6 +355,8 @@ bueno ya luego de realizar las verificaciones,vamos a realizar una validacion ad
 
 antes de poner eso debemos poner que el campo es requerido y agregarle cualquier validacion que hagamos con pattern 
 
+Nota: para validar espacios en html. debemos agregarle un espacio [a-zA-Z ] esto nos valida letras mayusculas minusculas y espacio
+
 para resetear el formulario existe la funcionalidad reset. en el ejemplo que estamos haciendo. al dar click en submit, este creara una funcion la cual le pasaremos 
 como parametro, la variable del formulario que contiene todos los datos del objeto creado. esta funcion estara en el component.ts de register que es la clase que estamos manejando, al declararla 
 
@@ -712,3 +714,130 @@ ngDoCheck(){ //con este se actualiza ese mismo metodo
 }
 
 ahora luego de hacer esta logica, debemos redirigir apenas el usuario se haya registrado y se haya persistido los datos 
+
+
+
+
+
+AJUSTE DE USUARIO. 
+tendremos un formulario donde tendremos los datos del usuario identificado. y luego podemos subir un avatar(imagen de perfil). 
+
+debemos crear el componente y la ruta. 
+Nota: recuerda que se realiza usando ng g component 
+
+al estar ya creado, debemos crear la ruta del mismo en el archivo routing que hemos creado anteriormente 
+
+seguido a eso debemos crear el formulario para editar el usuario, debemos agregarle la variable al formulario #variable="ngForm"
+adicionalmente a eso, no podemos olvidar agregarle el ng model a los inputs. como lo hemos visto en ocasiones anteriormente
+
+debemos crear la variable que se ejecutara al ejecutar el evento submit (ngSubmit).
+
+EN ESTE FORMULARIO, DEBEMOS TENER UN CAMPO FILE. YA QUE AQUI TENDREMOS QUE AGREGAR LA FOTO DE PERFIL 
+lo haremos funcionar con un plugin que instalamos el cual es angular-file-uploaded
+
+EN ESTE PUNTO, PARA QUE NOS APAREZCA LA INFORMACION DEL USUARIO CARGADA DEBEMOS INSTANCIAR EL USUARIO DENTRO DEL CONSTRUCTOR
+Nota: cuando vayamos a usar el userIdentify y el token es mejor no asignarles un tipo. en mi caso le asigne un tipo string y me dio error 
+
+
+seguido a eso debemos crear un metodo en el service que nos envie la informacion de actualizacion de los datos. lo hacemos mediante el metodo put 
+pero antes de eso debemos recibir los datos que nos envia, este metodo debe recibir el parametro de user(el objeto que modificamos) y el token 
+
+ya en el component debemos ejecutarlo dentro del metodo onsubmit. 
+
+ahora bien. este metodo que hemos creado en el user services retorna un observable, el cual usa dos funciones. la primera es la respuesta 
+y la segunda el error en caso de no haber conexion o algo asi, en caso de error debemos reemplazar la propiedad estado para mostrar la alerta 
+
+si hay conexion, la api nos puede dar dos posibles respuestas, correcto y error. en ese caso debemos manejar las dos posibles respuesta 
+sin olvidar cambiar el estado ya que eso es lo que vera el usuario con la ventana de notificacion que enviemos 
+en caso de error hacemos lo mismo de ahora, cambiar la propiedad a error y mostrar el error 
+
+en caso que no, cambiamos la propiedad a correcto y mostramos el mensaje de correcto, seguido a eso. debemos actualizar el objeto que tenemos en el 
+localstorage, si no lo hacemos. este seguira persistiendo. por lo cual nos mostrara informacion obsoleta, para solucionar eso 
+podemos podificar las propiedades del mismo, y luego sobre escribir el objeto en el local storage de esta manera 
+
+ //modificar los campos del usuario identificado para actualizar el localstorage 
+          this.userIdentify.name = this.user.name;
+          this.userIdentify.lastName = this.user.lastName;
+          this.userIdentify.userName = this.user.userName;
+          this.userIdentify.email = this.user.email;
+      
+          localStorage.setItem('userIdentify', this.userIdentify);
+
+el objeto user tendra en tiempo real por lo cual sera mas sencillo actualizar el local storage de esta manera
+
+ese codigo nos dara un error en el local storage. RECUERDA QUE DEBEMOS CONVERTIR EL USERIDENTIFY EN UN OBJETO JSON 
+si no lo hacemos de esta manera, nos dara un error y no nos mostrara nada. tendremos que borrar el localStorage del navegador 
+
+ya luego de corregir este error, nos permitira cargar la informacion del local storage y asi actualizar en tiempo real el usuario 
+
+
+EDITOR DE TEXTO ENRIQUESIDO 
+
+lo usaremos mas que todo al momento de añadir un post, o en caso de tener una seccion para agregar alguna descripcion 
+
+ya en este punto lo hemos instalado, en el package, y usamos el comando npm update para que lo instale
+ahora debemos seguir la documentacion. en este link la encontraremos 
+
+https://www.npmjs.com/package/angular-froala-wysiwyg
+
+para instalarlo debemos abrir el module.ts e importarlo 
+
+import { FroalaEditorModule, FroalaViewModule } from 'angular-froala-wysiwyg';
+
+seguido a eso debemos agregar los modulos que este necesita, ya en este punto hemos agregado el archivo los archivos js y css
+es indispensable para froala que se añada el plugin de jquery.. luego de eso. podremos agregarlo a un textarea agregndo el atributo 
+
+[froalaEditor], pero podemos modificarlo, en caso de tener opciones que no queramos. a este le damos el valor de options 
+
+[froalaEditor]="options" luego lo editamos en el componente que maneje esa vista 
+
+public options: Object = {
+  placeholderText: 'Edit Your Content Here!',
+  charCounterCount: false
+}
+
+y de esta manera podemos agregarle las opciones que nosotros deseemos, las opciones podemos enontrarlas en este link 
+https://www.froala.com/wysiwyg-editor/docs/options
+
+
+SUBIR EL AVATAR 
+en este punto, estaremos subiendo un archivo. por lo cual usaremos una libreria. angular-file-uploader
+ segun la documentacion de este modulo, debemos importar una clase 
+ import { AngularFileUploaderModule } from "angular-file-uploader"; adicional a agregar el modulo al import 
+
+ luego de hacer todo esto debemos agregar una etiqueta o directiva. que en la misma documetacion podemos encontrar. esta directiva reemplazara el input="file" 
+ que hemos agregado 
+
+ <angular-file-uploader
+      [config]="afuConfig">
+</angular-file-uploader>
+
+como podemos ver este tiene una diretiva de configuracion, dentro tiene un nombre. esto es el nombre de una propiedad que estara en nuestro component.ts 
+esta sera la configuracion inicial 
+
+afuConfig = {
+    uploadAPI: {
+      url:"https://example-file-upload-api"
+    }
+};
+
+como podemos ver. esta tiene una url, es la url de la api donde estaremos subiendo el archivo , pero tendremos mas posibilidades de subir imagenes 
+o configuracion agregando los formatos posibles, el tema, etc 
+
+https://www.npmjs.com/package/angular-file-uploader en este link podremos encontrar toda la informacion necesaria 
+
+en el ejemplo usamos un ejemplo mas elavorado. el cual nos permite modificar el usuario, ya que cuando se realice la subida del archivo, esta nos lo mostrara
+
+por lo cual debemos pasarle la directiva de esta  manera 
+
+<angular-file-uploader
+      [resetUpload]=resetVar
+      (ApiResponse)="imageUpload($event)"
+      [config]="afuConfig">
+</angular-file-uploader>  la funcion que ejecutaremos sera imagenUpload. esta nos actualizara ese objeto 
+
+a la funcion le pasaremos los datos que nos retorna la api (ApiResponse)="imageUpload($event)"
+al momento de enviar la informacion hacia la api debemos verificar que la cabecera sea la correcta 
+
+
+ 

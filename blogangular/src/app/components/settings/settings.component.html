@@ -1,0 +1,59 @@
+<div class="container">
+
+  <h1>{{pageTitle}}</h1>
+
+  <form #formularioUpdate="ngForm" (ngSubmit)="onSubmit(formularioUpdate)">
+
+    <div class="alert alert-success" *ngIf="estado == 'correcto'">
+      Update was successful
+    </div>
+    <div class="alert alert-danger" *ngIf="estado == 'error'">
+      an error has occurred, check the information
+    </div>
+
+    <div class="form-group">
+      <label for="name">Name</label>
+      <input type="text" name="name" id="name" class="form-control" [(ngModel)]="user.name" #name="ngModel" required
+        pattern="[a-zA-Z ]+" placeholder="John">
+      <div [hidden]="name.valid || name.pristine" class="alert alert-danger" role="alert">
+        Name is required
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="lastName">Last Name</label>
+      <input type="text" name="lastName" id="lastName" class="form-control" [(ngModel)]="user.lastName"
+        #lastName="ngModel" pattern="[a-zA-Z ]+" required placeholder="Snow">
+      <div [hidden]="lastName.valid || lastName.pristine" class="alert alert-danger" role="alert">
+        Last Name is required
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="userName">User Name</label>
+      <input type="text" name="userName" id="userName" class="form-control" [(ngModel)]="user.userName"
+        placeholder="JohnSnow5" #userName="ngModel" required>
+      <div [hidden]="userName.valid || userName.pristine" class="alert alert-danger" role="alert">
+        User name is required and valid
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="email">Email</label>
+      <input type="email" name="email" id="email" class="form-control" [(ngModel)]="user.email"
+        pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" #email="ngModel" placeholder="JohnSnow5@game.tr" required>
+      <div [hidden]="email.valid || email.pristine" class="alert alert-danger" role="alert">
+        Email is required and valid
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="image">Avatar</label>
+      <angular-file-uploader
+      [resetUpload]=resetVar
+      (ApiResponse)="imageUpload($event)"
+      [config]="afuConfig">
+      </angular-file-uploader>
+    </div>
+
+    <input type="submit" value="Save" class="btn btn-success" [disabled]="formularioUpdate.invalid">
+
+  </form>
+
+</div>
