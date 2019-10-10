@@ -1,5 +1,6 @@
 import { Component, DoCheck, OnInit } from '@angular/core';
 import { configServiceUser } from './services/user.service';
+import { global } from './services/global';
 
 @Component({
   selector: 'app-root',
@@ -12,6 +13,7 @@ export class AppComponent implements OnInit, DoCheck {
 
   public userIdentity; 
   public token; 
+  public url = global.urlApi;
 
   constructor(private serviceProvider: configServiceUser) {
     this.loadUser()

@@ -27,6 +27,9 @@
       </ul>
 
       <ul class="navbar-nav navbar-right" *ngIf="userIdentity">
+          <div *ngIf="userIdentity.image" >
+              <img src="{{url + 'user/picture/'+ userIdentity.image}}" alt="image-user" class="image-avatar">
+          </div>
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
             aria-haspopup="true" aria-expanded="false">
@@ -34,7 +37,7 @@
           </a>
           <div class="dropdown-menu" aria-labelledby="navbarDropdown">
             <a class="dropdown-item" href="#">Create post</a>
-            <a class="dropdown-item" href="#">Create category</a>
+            <a class="dropdown-item" [routerLink]="[ '/create-category']">Create category</a>
             <div class="dropdown-divider"></div>
             <a class="dropdown-item" href="#">My profile</a>
             <a class="dropdown-item" [routerLink]="[ '/settings' ]" >settings</a>

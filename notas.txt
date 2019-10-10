@@ -36,7 +36,7 @@ npm uninstall -g @angular/cli  pues en este caso no esta nada porque no tenemos 
 Nota: para limpiar la pantalla en la consola de windows es usando cls
 
 luego de seguir todos los pasos ahora si podemos instalar angular, con el siguiente comando npm install -g @angular/cli de esta manera instalamos el 
-cli que nos dara una serie de comandos con los cuales rearemos los proyectos y haremos ciertas cosas. 
+cli que nos dara una serie de comandos con los cuales crearemos los proyectos y haremos ciertas cosas. 
 
 para crear un proyecto como tal debemos ejecutar ng new, aparte de crear un proyecto de angular desde 0 nos brindara una serie de directorios
 al ejecutar este comado nos pedira un nombre de proyecto, algo similar a cuando usamos composer con laravel 
@@ -119,7 +119,7 @@ angular trabaja igualmente con el modelo-vista-controlador asi que debemos crear
 creamos la carpeta en la carpeta app que asi mismo esta en src. manejaremos el modelo mvc pero en vez de controladores usaremos componentes 
 
 creamos los modelos de manera similar a un archivo normal, solo que la extension debe ser .ts de typescript
-Nota: los nombre son en minuscula
+Nota: los nombre son en minuscula, debemos crerar una carpeta modelos
 
 los modelos seran clases sobre los cuales crearemos objetos de este tipo (user, etc)
 
@@ -227,7 +227,7 @@ segun la documentacion de angular. es necesario poner la ruta ** o sea la ruta n
 luego de eso debemos exportar dos elementos, la rutas y la configuracion 
 export const appRoutingProviders: any[] = []; //para cargar las rutas como servicios
 
-.luego exportaremos el modulo de las rutas, o sea la configuracion que hicimos hace poco en la documentacion de angular. esta llama una funcion 
+.luego exportaremos el modulo de las rutas, o sea la configuracion que hicimos hace poco. en la documentacion de angular. esta llama una funcion 
 
 pero en nuestro ejemplo crearemos una constante y la exportamos, de tipo ModuleWithProviders e instanciaremos RouterModule. ya como aparece en el ejemplo de arriba
 RouterModule.forRoot(appRoutes). el parametro que recibe es la constante de tipo Routes que creamos con las rutas 
@@ -281,6 +281,8 @@ esto debemos hacerlo con cada uno de los elementos que queramos enlazar.. de est
 
 
 
+
+
 CREAR FORMULARIO DE REGISTRO
 
 para crear un formulario con angular debemos importar en el app.module. el modulo formsModule de angular/forms
@@ -291,7 +293,7 @@ en este caso recuerda que estamos usando boostrap lo cual hace el desarrollo mas
 
 luego de crear el formulario en html y agregarle los estilos css. pasamos al componente de este registro.
 importamos el modelo que usaremos, en este caso el de usuario
-
+7
 import {users} from '../../models/users'; 
 
 creamos un atributo de tipo usuario   public user: users;  
@@ -299,12 +301,12 @@ y en el constructor le agregamos parametros. en este punto instancimamos la clas
 this.user = new users(1, '', '', '', '', '', 'USER', '')   lo rellenamos de esta manera, ya que el formulario se encargara de llenarlo  
 
 vamos al componente de registro html y al formulario le agregamos una serie de variables.
-esto lo hacemos agregando # antes del nombre de la variable en la vista #formularioRegistro="ngForm"
+esto lo hacemos agregando # antes del nombre de la variable en la vista #formularioRegistro="ngForm" (esta es la variable del formulario)
 
-adicional a eso cuando se produzca el evento ngSubmit. llame a un metodo onSubmit, el cual crearemos en el component.ts 
-eso lo hacemos de esta manera  (ngSubmit)="onSubmit(formularioRegistro)"
+adicional a eso cuando se produzca el evento ngSubmit. llame a un metodo onSubmit, el cual crearemos en el register component.ts 
+eso lo hacemos de esta manera  (ngSubmit)="onSubmit(formularioRegistro)" en este caso le pasamos el formulario para poder vaciarlo 
 
-lo que dice la documentacion de angular respecto a ese metodo " El usuario debe poder enviar este formulario después de completarlo. 
+lo que dice la documentacion de angular respecto a ese metodo "El usuario debe poder enviar este formulario después de completarlo. 
 El botón Enviar en la parte inferior del formulario no hace nada por sí solo, pero activará el envío de un formulario debido a su tipo 
 (type = "submit").
 
@@ -373,6 +375,9 @@ onSubmit(form){
   https://angular.io/guide/forms#introduction-to-template-driven-forms
 
 
+
+
+
 CREAR UN SERVICIO DE USUARIO 
 
 crear un metodo para hacer una peticion ajax al backend 
@@ -387,14 +392,14 @@ los tendremos en una carpeta
 importaremos unos modulos. 
 
 injectable de from @angular/core
-el modulo httpClient de @angular/common/http
+el modulo httpClient de @angularjjk /common/http
 aparte importamos  httpheaders para manejar las cabeceras tambien de  @angular/common/http
 tambien debemos importar un modulo llamado observable, segun la documentacion de angular es necesario si se usa httpclient 
 RxJS es una biblioteca para componer código asíncrono y de devolución de llamada en un estilo funcional y reactivo. Muchas API angulares, incluido HttpClient, producen y consumen RxJS Observables.
 por ultimo importamos el modelo de usuario 
 
 seguido debemos llamar el decorador inyectable para que se pueda usar como servicio , @inyectable seguido a eso creamos una clase y la exportamos 
-creamos el contrsuctor y le pasamos la propiedad publica http client
+creamos el contrsuctor y le pasamos como parametrodd la propiedad publica http client
 
 @Injectable()
 export class configServiceUser{
@@ -429,7 +434,7 @@ en este caso usuario
 adicional a eso, recuerda que estamos haciendo el backend separado. por lo cual debemos convertir el usuario en json antes de enviarlo. si no nos dara error 
 adicional a eso, debemos enviarle con la llave 'json', para eso creamos una variable y le agregamos el string 'json' adicional a que le concatenamos el objeto antes visto 
 
-luego configuramos los header, para eso segun la documentacion de angular, debemos instanaciar la clase HttpHeaders 
+luego configuramos los header, para eso segun la documentacion de angular, debemos instanaciar la clase HttpHeaders, esto lo hacemos en user.service
 esta recibe unos parametros como en un objeto json 
 https://angular.io/guide/http#http-headers
 
@@ -660,7 +665,8 @@ se ocultara. lo mismo con el menu de login y creaccion de usuario
 
 
 
-CERAR SESION 
+CERRAR SESION 
+
 primero crearemos una ruta en el archivo de rutas, crearemos una ruta logout la cual tendra adicional un parametro 
 
 Nota: los parametros en las rutas los pasamos con :. por ejemplo, logout/:sure 
@@ -670,9 +676,9 @@ luego de crear la ruta, debemos ir al componente de login. importaremos tres cla
 Router, ActivatedRoute, Params(sacar parametros de la url), luego lo cargamos en los parametros del constructor 
 el contructor 
 
-luego de hacer esto, ya podemos crear el cuerpo del metodo logout para crear el cuero debemos llamar al objeto ActivatedRoute. 
+luego de hacer esto, ya podemos crear el cuerpo del metodo logout, para crear el cuerpo debemos llamar al objeto ActivatedRoute. 
 
-Nota: Proporciona acceso a información sobre una ruta asociada con un componente que se carga en una salida. 
+Nota: Proporciona acceso a información sobre una ruta asociada con un componente que se carga en una salida. nos permite acceder a los parametros de la url 
 
 este maneja un metodo lamado Params, Un observable de los parámetros de la matriz en el ámbito de esta ruta.
 
@@ -837,7 +843,35 @@ por lo cual debemos pasarle la directiva de esta  manera
 </angular-file-uploader>  la funcion que ejecutaremos sera imagenUpload. esta nos actualizara ese objeto 
 
 a la funcion le pasaremos los datos que nos retorna la api (ApiResponse)="imageUpload($event)"
-al momento de enviar la informacion hacia la api debemos verificar que la cabecera sea la correcta 
+al momento de enviar la informacion hacia la api debemos verificar que la cabecera sea la correcta
+
+ahora. para mostrar la imagen subida anteriormente debemos hacer una validacion y aparte debemos poner la url del api en una propiedad para que esta contenga la misma y asi 
+poder usarla en la vista. 
+
+la validacion que podemos hacer es, en caso de existir una imagen en el usuario que se esta modificando en el momento, entonces 
+creamos una etiqueta imagen, a la url de la imagen le pasamos la url hacia la funcion que nos devuelve la imagen 
+
+MOSTRAR IMAGEN EN LA BARRA DE NAVEGACION 
+
+la idea es basicamente la misma que la de ahora, por lo que iremos al app component donde esta la barra. debemos crear un ngIf
+el cual usaremos para validar si en el localstorage esta la imagen de usuario, en caso de estarla. mostraremos una etiqueta img 
+y le damos estilos con css. 
+
+realmente es sencillo, lo que tenemos que tener en cuenta es que en el component debemos importar el modulo de global(donde esta la url)
+y debemos tener el userIdentify donde tenemos la info del local storage 
 
 
- 
+
+
+CREAR CATEGORIAS  
+en este punto crearemos la seccion de categorias, por lo cual estaremos componentes  luego de agregarlo en app.module, adicional luego de crear la ruta en el modulo routing.
+RECUERDA QUE CUANDO CREEMOS UN COMPONENT QUE TENGA QUE VER DIRECTAMENTE CON UN MODULO, DEBEMOS IMPORTAR ESTE 
+
+adicional a eso debemos importar unos modulos adicionales, el service que creamos ( para sacar el token y el usuario identificado), 
+los modulos de rutas (import { Router, ActivatedRoute, Params } from '@angular/router'), 
+
+crear las propiedades privadas en el parametro del constructor las cuales son, instanciar el servicio, instanciar la clase Router 
+instanciar el ActivatedRoute. aparte debemos crear unos parametros para el token, el usuario identificado y el modulo 
+estos los rellenaremos dentro del cuerpo del constructor 
+
+dejare mi proyecto hasta el momento aqui. asi que continuare luego  

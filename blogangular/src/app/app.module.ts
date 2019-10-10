@@ -13,6 +13,7 @@ import { ErrorComponent } from './components/error/error.component';
 import { HomeComponent } from './components/home/home.component';
 import { SettingsComponent } from './components/settings/settings.component';
 import { AngularFileUploaderModule } from "angular-file-uploader";
+import { CreateCategoryComponent } from './components/create-category/create-category.component';
 
 
 @NgModule({
@@ -22,7 +23,8 @@ import { AngularFileUploaderModule } from "angular-file-uploader";
     RegisterComponent,
     ErrorComponent,
     HomeComponent,
-    SettingsComponent
+    SettingsComponent,
+    CreateCategoryComponent
   ],
   imports: [
     BrowserModule,

@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient,  HttpHeaders}  from '@angular/common/http';
 import { Observable } from 'rxjs';
-import {user} from '../models/users';
+import { user } from '../models/users';
 import { global } from './global';  //tenemos la url de la api 
+import { categories } from '../models/categories';
 
 @Injectable()
 export class configServiceUser{
@@ -84,5 +85,12 @@ export class configServiceUser{
                                       
 
         return this.http.put(`${this.url}update`, key, {headers: header});  
+    }
+
+    createCategory(category: categories, token){
+        let cat = JSON.stringify(category);
+        let key = `json=${cat}`;
+
+        
     }
 }

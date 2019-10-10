@@ -43,8 +43,16 @@
         Email is required and valid
       </div>
     </div>
+
     <div class="form-group">
       <label for="image">Avatar</label>
+
+      <div *ngIf="user.image">
+
+        <img src="{{url + 'user/picture/' + user.image}}"> <!--esto nos muestra la imagen en caso de existir -->
+        
+      </div>
+
       <angular-file-uploader
       [resetUpload]=resetVar
       (ApiResponse)="imageUpload($event)"

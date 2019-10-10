@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { user } from '../../models/users';
 import { configServiceUser } from '../../services/user.service';
-import { global} from '../../services/global';
+import { global } from '../../services/global';
 
 @Component({
   selector: 'app-settings',
@@ -16,6 +16,7 @@ export class SettingsComponent implements OnInit {
   public userIdentify;
   public user: user;
   public estado: string;
+  public url; 
   //configuracion de servicio de subida de archivos
   public afuConfig = {
     multiple: false,
@@ -47,6 +48,7 @@ export class SettingsComponent implements OnInit {
       this.userIdentify = this.userService.getUserIdentity(),
       this.token = this.userService.getToken(),
       this.user = new user(1, this.userIdentify.name, this.userIdentify.lastName, '', this.userIdentify.email, '', 'USER', '', '');
+      this.url = global.urlApi
   }
 
   ngOnInit() {
